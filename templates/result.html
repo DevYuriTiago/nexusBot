@@ -3,83 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultado - Gerador de Conteúdo</title>
+    <title>Post Gerado para Instagram</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .carousel-item {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            min-height: 300px;
-        }
-        .instagram-post {
+        .content-section {
+            max-width: 800px;
+            margin: 0 auto;
             background-color: white;
             border-radius: 10px;
             padding: 20px;
-            margin-top: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .instagram-preview {
+            background-color: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 20px;
+            margin-top: 20px;
         }
         .instagram-caption {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             white-space: pre-wrap;
-            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
         }
-        .generated-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 15px;
+        .reddit-post {
+            border-left: 4px solid #ff4500;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .copy-button {
+            margin-top: 20px;
+        }
+        .success-message {
+            display: none;
+            color: green;
+            margin-top: 10px;
         }
     </style>
 </head>
-<body>
+<body class="bg-light">
     <div class="container mt-5">
-        <h1 class="mb-4">Conteúdo Gerado</h1>
+        <h1 class="text-center mb-4">Post Gerado para Instagram</h1>
         
-        <!-- Carrossel -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2 class="h5 mb-0">Carrossel para Instagram</h2>
+        <!-- Posts Originais e Traduções -->
+        <div class="content-section">
+            <h2 class="h4 mb-3">Posts Originais e Traduções</h2>
+            <div class="generated-content">
+                {{ generated_content.split('PUBLICAÇÃO PARA INSTAGRAM:')[0] | safe }}
             </div>
-            <div class="card-body">
-                <div id="carouselContent" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        {% for slide in carousel_content.split('[Slide') %}
-                            {% if slide.strip() %}
-                                <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                    <div class="d-block w-100">
-                                        {{ slide | safe }}
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselContent" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Anterior</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselContent" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Próximo</span>
-                    </button>
+        </div>
+
+        <!-- Preview do Post do Instagram -->
+        <div class="content-section">
+            <h2 class="h4 mb-3">Post para Instagram</h2>
+            <div class="instagram-preview">
+                <div class="instagram-caption" id="post-content">
+                    {% if 'PUBLICAÇÃO PARA INSTAGRAM:' in generated_content %}
+                        {{ generated_content.split('PUBLICAÇÃO PARA INSTAGRAM:')[1] | safe }}
+                    {% else %}
+                        {{ generated_content | safe }}
+                    {% endif %}
+                </div>
+                <button class="btn btn-primary copy-button w-100" onclick="copyToClipboard()">
+                    Copiar Texto do Post
+                </button>
+                <div class="success-message text-center" id="success-message">
+                    ✅ Texto copiado com sucesso!
                 </div>
             </div>
         </div>
 
-        <!-- Post do Instagram -->
-        <div class="instagram-post">
-            {% if image_base64 %}
-                <img src="data:image/png;base64,{{ image_base64 }}" alt="Imagem gerada" class="generated-image">
-            {% endif %}
-            <div class="instagram-caption">
-                {{ instagram_caption | safe }}
-            </div>
-        </div>
-
-        <div class="mt-4">
-            <a href="{{ url_for('index') }}" class="btn btn-primary">Voltar</a>
+        <div class="text-center mt-4 mb-5">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Gerar Novo Post</a>
         </div>
     </div>
+
+    <script>
+        function copyToClipboard() {
+            const content = document.getElementById('post-content').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                const message = document.getElementById('success-message');
+                message.style.display = 'block';
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 3000);
+            });
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

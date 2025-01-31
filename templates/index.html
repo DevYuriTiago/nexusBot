@@ -1,225 +1,257 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEXUS - Acelerador de Conteúdo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #00cec9;
+            --text-color: #2d3436;
+            --bg-color: #f5f6fa;
+        }
+        
         body {
-            background: linear-gradient(135deg, #0a192f 0%, #112240 100%);
-            color: #e6f1ff;
-            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
         }
-        .container {
-            max-width: 800px;
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color) !important;
         }
+        
         .card {
-            background: rgba(17, 34, 64, 0.95);
-            border: 1px solid #233554;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+        
+        .form-control {
+            border-radius: 30px;
+            padding: 12px 20px;
+            border: 2px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25);
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .status-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+        
+        .status-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .result-image {
+            max-width: 100%;
+            border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .form-control {
-            background: #1d2d50;
-            border: 1px solid #233554;
-            color: #e6f1ff;
+        
+        .carousel-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
-        .form-control:focus {
-            background: #233554;
-            color: #e6f1ff;
-            border-color: #64ffda;
-            box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25);
+        
+        .instagram-caption {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
         }
-        .btn-primary {
-            background: #64ffda;
-            border: none;
-            color: #0a192f;
-            font-weight: 600;
+        
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .btn-primary:hover {
-            background: #4cd8b9;
-            color: #0a192f;
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
         }
-        .progress {
-            height: 8px;
-            background-color: #233554;
-        }
-        .progress-bar {
-            background-color: #64ffda;
-        }
-        .nexus-logo {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #64ffda, #4cd8b9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
             border-radius: 50%;
-            background-color: #64ffda;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
+            animation: spin 1s linear infinite;
         }
-        @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.7);
-            }
-            70% {
-                transform: scale(1);
-                box-shadow: 0 0 0 10px rgba(100, 255, 218, 0);
-            }
-            100% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(100, 255, 218, 0);
-            }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        .step-indicator {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .step-indicator.active {
-            opacity: 1;
-        }
-        .flash-message {
-            background: rgba(255, 99, 71, 0.2);
-            border: 1px solid #ff6347;
-            color: #ff6347;
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
         }
     </style>
 </head>
 <body>
-    <div class="container py-5">
-        <div class="text-center mb-4">
-            <div class="nexus-logo">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">
                 <i class="fas fa-bolt"></i> NEXUS
-            </div>
-            <p class="lead mb-0">
-                <span class="status-indicator"></span>
+            </a>
+            <span class="navbar-text">
                 Acelerador de Conteúdo com IA
-            </p>
+            </span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <!-- Input Form -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card animate-fade-in">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="fas fa-magic"></i> Crie conteúdo viral em segundos
+                        </h5>
+                        
+                        <form method="POST" action="/">
+                            <div class="input-group mb-3">
+                                <input type="text" 
+                                       class="form-control" 
+                                       name="prompt" 
+                                       placeholder="Digite um tema ou assunto..."
+                                       value="{{ prompt if prompt else '' }}"
+                                       required>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-rocket"></i> Gerar
+                                </button>
+                            </div>
+                        </form>
+                        
+                        {% if response %}
+                        <div class="mt-4">
+                            <h5>Resposta:</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    {{ response|safe }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if reddit_posts %}
+                        <div class="mt-4">
+                            <h5>Posts Relacionados:</h5>
+                            {% for post in reddit_posts %}
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <h6>{{ post.title }}</h6>
+                                    {% if post.url %}
+                                    <a href="{{ post.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-external-link-alt"></i> Ver Post
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert flash-message mb-4" role="alert">
-                        {{ message }}
+                <div class="toast align-items-center text-white bg-{{ category }} border-0" 
+                     role="alert" 
+                     aria-live="assertive" 
+                     aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" 
+                                class="btn-close btn-close-white me-2 m-auto" 
+                                data-bs-dismiss="toast" 
+                                aria-label="Close">
+                        </button>
                     </div>
+                </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <form method="POST" id="searchForm">
-                    <div class="mb-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="keyword" placeholder="Digite um tema ou assunto..." required>
-                            <button type="submit" class="btn btn-primary" id="generateBtn">
-                                <i class="fas fa-bolt"></i> Gerar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <div id="progressContainer" style="display: none;">
-                    <div class="progress mb-2">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-                    </div>
-                    <div class="step-indicators">
-                        <div class="step-indicator" id="step1">
-                            <i class="fas fa-search"></i> Buscando conteúdo relevante...
-                        </div>
-                        <div class="step-indicator" id="step2">
-                            <i class="fas fa-brain"></i> Analisando e sintetizando...
-                        </div>
-                        <div class="step-indicator" id="step3">
-                            <i class="fas fa-magic"></i> Gerando conteúdo otimizado...
-                        </div>
-                        <div class="step-indicator" id="step4">
-                            <i class="fas fa-check-circle"></i> Conteúdo pronto!
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% if carousel_content %}
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5 class="card-title mb-4">
-                    <i class="fas fa-images"></i> Carrossel para Instagram
-                </h5>
-                <div class="carousel-content">
-                    {{ carousel_content | safe }}
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if instagram_caption %}
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5 class="card-title mb-4">
-                    <i class="fas fa-comment"></i> Legenda para Instagram
-                </h5>
-                <div class="caption-content">
-                    {{ instagram_caption | safe }}
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if image_data %}
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title mb-4">
-                    <i class="fas fa-image"></i> Imagem Gerada
-                </h5>
-                <img src="data:image/jpeg;base64,{{ image_data }}" class="img-fluid rounded" alt="Imagem gerada">
-            </div>
-        </div>
-        {% endif %}
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.querySelector('.progress-bar');
-            const generateBtn = document.getElementById('generateBtn');
-            const steps = [
-                document.getElementById('step1'),
-                document.getElementById('step2'),
-                document.getElementById('step3'),
-                document.getElementById('step4')
-            ];
-            
-            progressContainer.style.display = 'block';
-            generateBtn.disabled = true;
-            
-            let progress = 0;
-            const interval = setInterval(() => {
-                if (progress < 90) {
-                    progress += 5;
-                    progressBar.style.width = progress + '%';
-                    
-                    // Ativa os indicadores de etapa baseado no progresso
-                    if (progress <= 25) {
-                        steps[0].classList.add('active');
-                    } else if (progress <= 50) {
-                        steps[1].classList.add('active');
-                    } else if (progress <= 75) {
-                        steps[2].classList.add('active');
-                    }
-                }
-            }, 500);
+        document.addEventListener('DOMContentLoaded', function() {
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            var toastList = toastElList.map(function(toastEl) {
+                return new bootstrap.Toast(toastEl, {
+                    autohide: true,
+                    delay: 3000
+                })
+            });
+            toastList.forEach(toast => toast.show());
         });
     </script>
 </body>
